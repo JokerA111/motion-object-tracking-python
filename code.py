@@ -1,3 +1,4 @@
+
 from colorama import init, Fore
 
 # Initialize colorama
