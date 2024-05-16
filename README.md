@@ -1,4 +1,4 @@
-#Object detection and Motion Tracking System
+# Object detection and Motion Tracking System
 
 Overview
 Welcome to the Motion Detection and Tracking System project! This repository contains code for a system that detects and tracks motion in video streams. This project is designed to be used for surveillance, monitoring, and other applications where detecting and tracking moving objects is essential.
