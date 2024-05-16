@@ -1,3 +1,7 @@
+from colorama import init, Fore
+
+# Initialize colorama
+init()
 banner ="""                     
                           Motion Detection and Tracking System
                                   :-=+####%%%%%%####*+=-.                                 
@@ -162,7 +166,7 @@ def object_detection():
     print("Running object detection...")  # This line should be aligned with the function definition
 
 # Display the banner
-print(banner)
+print(Fore.GREEN + banner + Fore.RESET)
 # Prompt the user to choose an option
 print("Choose an option:")
 print("1. Motion Tracking")
