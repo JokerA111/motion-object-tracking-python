@@ -49,7 +49,7 @@ banner ="""
                                  Cyber Wing Gold Campus
 
 """
-print (banner)
+
 # Define functions for motion tracking and object detection
 def motion_tracking():
     # Your motion tracking code here
