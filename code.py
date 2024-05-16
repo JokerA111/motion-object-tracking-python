@@ -1,312 +1,179 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 10,
-   "id": "cfa48b75-64f8-4d25-883d-d2e8d1ec06cc",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "                     \n",
-      "                          Motion Detection and Tracking System\n",
-      "                                  :-=+####%%%%%%####*+=-.                                 \n",
-      "                           .-=*#**==-:.             .:-=+*#*+-:                           \n",
-      "                        -*%#+-                              :=*%#=:                       \n",
-      "                    :=##=:                                      :-*#+-                    \n",
-      "                  +@#=                                              -*@*.                 \n",
-      "               -*%=.                                                   -#%=               \n",
-      "             :%#:                                                        .*@=             \n",
-      "           :%#:                                                            .+%=           \n",
-      "          +%:         :              ....:::::::::...              :.         #%:         \n",
-      "        =@*       -*%*.         .....:.. .: .. ..  .:.....          =%#=.      =%*        \n",
-      "       +@:    :.=@@%:        ...   :.    :  ..  ..   .:.   ...        +@@#.-.    #%       \n",
-      "      *#   .*#.#@@*.      ..:.   ..     :   ..   :.    ..   .:..       =@@#.+%:   +%:     \n",
-      "    .%%    %@ +@*.=:    .:     .::..   ..   ..    :   ..:::.    .:     +.=@* *@-   +@-    \n",
-      "   .%#  -.#@* =-+@+   ..       :     ..:..+#==%%*.::.     ..      ..   :@#-=::@@:-  =@-   \n",
-      "   *#  ++ @@:+%@#-   :.       :       :.  *#:.=@@. :       ..       :.  .+@@*:#@+ %  -%.  \n",
-      "  -@  -@+ @*@@=:   .:        :        :     .-%#:  :.       :        ..   .=#@*@= @#  *#  \n",
-      " .@=  #@* %#-:+-   :...     ..        :     .+     ..       .:     .....  :*-:*@::@@. :@= \n",
-      " *@   %@@ =:%@*   :     ....:..      ..     .:      :      ..::...     ..  +@@=-:+@@:  *@ \n",
-      ".@* . *@@ +@@*   ..        .:    ....:......@@=.....:....    .:         :   =@@#.+@@.. :@-\n",
-      "=@: # .@#+@@::   :         :.        .      :-      :         :         ..  :.#@@=@+ *. #*\n",
-      "*%. @= *#@#.-*  ..         :         :     .::.     :         ..         :  :# =@*%  %- +#\n",
-      "%# .@@..@+ =@-  :.         :         :  -:=%@@@*:-: :         ..         :   @# :@= *@- -%\n",
-      "@#  %@@.= +@%   :..........:........:=#@#   #%:  -@%+:........::.........:   =@%.= *@@: -%\n",
-      "%#  =@@# =@@:   :.         : :==+*#%@@@@:  -++-.  #@@@@%*+==- ..         :    %@% +@@%  -%\n",
-      "#%   +@@-#@* +  ..         :-@@@@@@@@@@%    *%    =@@@@@@@@@@*..         :  .-=@@.@@%.. +#\n",
-      "+@:.* :@#*@:.@.  :         :*@@@@@@@@@@@.   @@=   *@@@@@@@@@@@-         .:  #+ %@=@+ := #*\n",
-      ".@+ @#:.#%% *@=  :.        :%@@@@@@@@@@@*  .@@+  :@@@@@@@@@@@@=         :  :@@ +@%- +@:.@-\n",
-      " #@ -@@+ -# %@+   :       .=@@@@@@@@@@@@@- .@@* .@@@@@@@@@@@@@#..      ..  =@@:=* -@@# +@ \n",
-      " .@= :%@@+..@@* - .......  =@@@@@@@@@@@@@@-:@@*.%@@@@@@@@@@@@@%   ...... ..*@@-.-%@@= .@+ \n",
-      "  =%   =@@@=*@# =%..:      @@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@:     .. +% #@@-%@@#.  *#  \n",
-      "   ##  :.+%@+%@ .@%  :    .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-    :. +@+ @@+@@*-.. -@.  \n",
-      "   .@* -#- :+*@= #@#  ..  -@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+  ..  =@@.-@#*- :++ :@=   \n",
-      "    :@* :%@*- .+::@@* : :.=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.:..::@@# +: .+@@+ -@*    \n",
-      "     .#*  -#@@%*=.+@@=-#=.*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@% :*+.@@#.-+#@@@+. -@=     \n",
-      "       #%.  :*@@@@#+%@:-@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@#.%@**@@@@#=   =@:      \n",
-      "        +@=  :::-=*##%%-:%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+.#@##*+=:::  :#%.       \n",
-      "         .##. :##+=::::-: -#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%= .-::::-+*#:  +@=         \n",
-      "           =%+. .=*%@@@@@@@%%%%#*%@@@@@@@@@@@@@@@@@@@@@@@+*%%%%@@@@@@@@#+:  =%*           \n",
-      "             =%+    ..:-=--:.  -+%@@@@@@@@@@@@@@@@@@@@@@@*=.  :--=--:..   =@*.            \n",
-      "              .+%#:  -+**+**#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#**++*+=: .+%+.              \n",
-      "                 :#%+:  :=+***+=-%@@@@@@@@@@@@@@@@@@@@@@@=-+****=-.  =#%=                 \n",
-      "                   .-*#+-.       @@@@@@@@@@@@@@@@@@@@@@@@-       :=##=:                   \n",
-      "                       :+%%+-   .@@@@@@@@@@@@@@@@@@@@@@@@+   :=#%*=                       \n",
-      "                          .-=*#*#@@@@@@@@@@@@@@@@@@@@@@@@%*#*+-.                          \n",
-      "                                 :-=+*##%%%@@@@%%%%#*+==:.                                \n",
-      "                               \n",
-      "                                 Cyber Wing Gold Campus\n",
-      "\n",
-      "\n"
-     ]
-    }
-   ],
-   "source": [
-    "banner =\"\"\"                     \n",
-    "                          Motion Detection and Tracking System\n",
-    "                                  :-=+####%%%%%%####*+=-.                                 \n",
-    "                           .-=*#**==-:.             .:-=+*#*+-:                           \n",
-    "                        -*%#+-                              :=*%#=:                       \n",
-    "                    :=##=:                                      :-*#+-                    \n",
-    "                  +@#=                                              -*@*.                 \n",
-    "               -*%=.                                                   -#%=               \n",
-    "             :%#:                                                        .*@=             \n",
-    "           :%#:                                                            .+%=           \n",
-    "          +%:         :              ....:::::::::...              :.         #%:         \n",
-    "        =@*       -*%*.         .....:.. .: .. ..  .:.....          =%#=.      =%*        \n",
-    "       +@:    :.=@@%:        ...   :.    :  ..  ..   .:.   ...        +@@#.-.    #%       \n",
-    "      *#   .*#.#@@*.      ..:.   ..     :   ..   :.    ..   .:..       =@@#.+%:   +%:     \n",
-    "    .%%    %@ +@*.=:    .:     .::..   ..   ..    :   ..:::.    .:     +.=@* *@-   +@-    \n",
-    "   .%#  -.#@* =-+@+   ..       :     ..:..+#==%%*.::.     ..      ..   :@#-=::@@:-  =@-   \n",
-    "   *#  ++ @@:+%@#-   :.       :       :.  *#:.=@@. :       ..       :.  .+@@*:#@+ %  -%.  \n",
-    "  -@  -@+ @*@@=:   .:        :        :     .-%#:  :.       :        ..   .=#@*@= @#  *#  \n",
-    " .@=  #@* %#-:+-   :...     ..        :     .+     ..       .:     .....  :*-:*@::@@. :@= \n",
-    " *@   %@@ =:%@*   :     ....:..      ..     .:      :      ..::...     ..  +@@=-:+@@:  *@ \n",
-    ".@* . *@@ +@@*   ..        .:    ....:......@@=.....:....    .:         :   =@@#.+@@.. :@-\n",
-    "=@: # .@#+@@::   :         :.        .      :-      :         :         ..  :.#@@=@+ *. #*\n",
-    "*%. @= *#@#.-*  ..         :         :     .::.     :         ..         :  :# =@*%  %- +#\n",
-    "%# .@@..@+ =@-  :.         :         :  -:=%@@@*:-: :         ..         :   @# :@= *@- -%\n",
-    "@#  %@@.= +@%   :..........:........:=#@#   #%:  -@%+:........::.........:   =@%.= *@@: -%\n",
-    "%#  =@@# =@@:   :.         : :==+*#%@@@@:  -++-.  #@@@@%*+==- ..         :    %@% +@@%  -%\n",
-    "#%   +@@-#@* +  ..         :-@@@@@@@@@@%    *%    =@@@@@@@@@@*..         :  .-=@@.@@%.. +#\n",
-    "+@:.* :@#*@:.@.  :         :*@@@@@@@@@@@.   @@=   *@@@@@@@@@@@-         .:  #+ %@=@+ := #*\n",
-    ".@+ @#:.#%% *@=  :.        :%@@@@@@@@@@@*  .@@+  :@@@@@@@@@@@@=         :  :@@ +@%- +@:.@-\n",
-    " #@ -@@+ -# %@+   :       .=@@@@@@@@@@@@@- .@@* .@@@@@@@@@@@@@#..      ..  =@@:=* -@@# +@ \n",
-    " .@= :%@@+..@@* - .......  =@@@@@@@@@@@@@@-:@@*.%@@@@@@@@@@@@@%   ...... ..*@@-.-%@@= .@+ \n",
-    "  =%   =@@@=*@# =%..:      @@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@:     .. +% #@@-%@@#.  *#  \n",
-    "   ##  :.+%@+%@ .@%  :    .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-    :. +@+ @@+@@*-.. -@.  \n",
-    "   .@* -#- :+*@= #@#  ..  -@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+  ..  =@@.-@#*- :++ :@=   \n",
-    "    :@* :%@*- .+::@@* : :.=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.:..::@@# +: .+@@+ -@*    \n",
-    "     .#*  -#@@%*=.+@@=-#=.*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@% :*+.@@#.-+#@@@+. -@=     \n",
-    "       #%.  :*@@@@#+%@:-@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@#.%@**@@@@#=   =@:      \n",
-    "        +@=  :::-=*##%%-:%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+.#@##*+=:::  :#%.       \n",
-    "         .##. :##+=::::-: -#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%= .-::::-+*#:  +@=         \n",
-    "           =%+. .=*%@@@@@@@%%%%#*%@@@@@@@@@@@@@@@@@@@@@@@+*%%%%@@@@@@@@#+:  =%*           \n",
-    "             =%+    ..:-=--:.  -+%@@@@@@@@@@@@@@@@@@@@@@@*=.  :--=--:..   =@*.            \n",
-    "              .+%#:  -+**+**#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#**++*+=: .+%+.              \n",
-    "                 :#%+:  :=+***+=-%@@@@@@@@@@@@@@@@@@@@@@@=-+****=-.  =#%=                 \n",
-    "                   .-*#+-.       @@@@@@@@@@@@@@@@@@@@@@@@-       :=##=:                   \n",
-    "                       :+%%+-   .@@@@@@@@@@@@@@@@@@@@@@@@+   :=#%*=                       \n",
-    "                          .-=*#*#@@@@@@@@@@@@@@@@@@@@@@@@%*#*+-.                          \n",
-    "                                 :-=+*##%%%@@@@%%%%#*+==:.                                \n",
-    "                               \n",
-    "                                 Cyber Wing Gold Campus\n",
-    "\n",
-    "\"\"\"\n",
-    "print (banner)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 11,
-   "id": "06b8f029-33d1-4d83-a5df-3ac413ca58c9",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Define functions for motion tracking and object detection\n",
-    "def motion_tracking():\n",
-    "    # Your motion tracking code here\n",
-    "    import cv2\n",
-    "    import numpy as np\n",
-    "    import torch\n",
-    "    from IPython.display import display, clear_output\n",
-    "    import time\n",
-    "\n",
-    "    # Re-import YOLOv5 in case it wasn't imported earlier\n",
-    "    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)\n",
-    "\n",
-    "    # Initialize webcam\n",
-    "    cap = cv2.VideoCapture(0)\n",
-    "\n",
-    "    # Set webcam frame dimensions (optional)\n",
-    "    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)\n",
-    "    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)\n",
-    "\n",
-    "    # Loop to capture frames and run object detection\n",
-    "    try:\n",
-    "        while True:\n",
-    "            ret, frame = cap.read()  # Capture a frame from the webcam\n",
-    "            if not ret:\n",
-    "                break\n",
-    "\n",
-    "            # Convert BGR to RGB (YOLOv5 expects RGB input)\n",
-    "            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)\n",
-    "\n",
-    "            # Run YOLOv5 object detection\n",
-    "            results = model(frame_rgb)\n",
-    "\n",
-    "            # Get the annotated frame with detections\n",
-    "            annotated_frame = np.squeeze(results.render())  # Render results to image\n",
-    "\n",
-    "            # Display the frame with detections\n",
-    "            clear_output(wait=True)  # Clear the output to update the video feed\n",
-    "            cv2.imshow(\"YOLOv5 Webcam\", cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR))\n",
-    "\n",
-    "            # Check if 'q' is pressed to exit the loop\n",
-    "            if cv2.waitKey(1) & 0xFF == ord('q'):\n",
-    "                break\n",
-    "\n",
-    "    except KeyboardInterrupt:\n",
-    "        pass\n",
-    "\n",
-    "    # Release the webcam and close any open windows\n",
-    "    cap.release()\n",
-    "    cv2.destroyAllWindows()\n",
-    "\n",
-    "    print(\"Running motion tracking...\")  # This line should be aligned with the function definition\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 16,
-   "id": "7a9bff1c-6ced-4f71-954c-891c5c2b8ab9",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "def object_detection():\n",
-    "    # Your object detection code here\n",
-    "    import cv2\n",
-    "    import mediapipe as mp\n",
-    "    import numpy as np\n",
-    "\n",
-    "    cap = cv2.VideoCapture(0)\n",
-    "    ws, hs = 1280, 720\n",
-    "    cap.set(3, ws)\n",
-    "    cap.set(4, hs)\n",
-    "\n",
-    "    if not cap.isOpened():\n",
-    "        print(\"Camera couldn't Access!!!\")\n",
-    "        exit()\n",
-    "\n",
-    "    mp_face_detection = mp.solutions.face_detection\n",
-    "    mp_drawing = mp.solutions.drawing_utils\n",
-    "\n",
-    "    while True:\n",
-    "        success, img = cap.read()\n",
-    "\n",
-    "        if not success:\n",
-    "            print(\"Failed to read frame from the camera!\")\n",
-    "            break\n",
-    "\n",
-    "        # Convert the image to RGB\n",
-    "        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)\n",
-    "        \n",
-    "        # Detect faces in the image\n",
-    "        with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:\n",
-    "            results = face_detection.process(rgb_img)\n",
-    "            \n",
-    "            if results.detections:\n",
-    "                for detection in results.detections:\n",
-    "                    ih, iw, _ = img.shape\n",
-    "                    bbox = int(detection.location_data.relative_bounding_box.xmin * iw), \\\n",
-    "                           int(detection.location_data.relative_bounding_box.ymin * ih), \\\n",
-    "                           int(detection.location_data.relative_bounding_box.width * iw), \\\n",
-    "                           int(detection.location_data.relative_bounding_box.height * ih)\n",
-    "\n",
-    "                    # Draw bounding box\n",
-    "                    cv2.rectangle(img, bbox, (255, 0, 255), 2)\n",
-    "\n",
-    "                    # Calculate forehead position\n",
-    "                    forehead_x = bbox[0] + bbox[2] // 2\n",
-    "                    forehead_y = bbox[1]\n",
-    "\n",
-    "                    # Draw a large red dot on the forehead\n",
-    "                    cv2.circle(img, (forehead_x, forehead_y), 10, (0, 0, 255), -1)\n",
-    "\n",
-    "        cv2.imshow(\"Image\", img)\n",
-    "        if cv2.waitKey(1) & 0xFF == ord('q'):\n",
-    "            break\n",
-    "\n",
-    "    cap.release()\n",
-    "    cv2.destroyAllWindows()\n",
-    "\n",
-    "    print(\"Running object detection...\")  # This line should be aligned with the function definition\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 17,
-   "id": "023a7f88-1a3c-4475-ab5e-cd77504698ed",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Running motion tracking...\n"
-     ]
-    }
-   ],
-   "source": [
-    "# Display the banner\n",
-    "print(banner)\n",
-    "# Prompt the user to choose an option\n",
-    "print(\"Choose an option:\")\n",
-    "print(\"1. Motion Tracking\")\n",
-    "print(\"2. Object Detection\")\n",
-    "\n",
-    "# Get user input for the option\n",
-    "option = input(\"Enter your choice: \")\n",
-    "# Execute the corresponding functionality based on the user's choice\n",
-    "if option == '1':\n",
-    "    motion_tracking()\n",
-    "elif option == '2':\n",
-    "    object_detection()\n",
-    "else:\n",
-    "    print(\"Invalid option!\")\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "7cf569bd-5e90-4f2b-93cc-2f2a05ce1dde",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.12.3"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+banner ="""                     
+                          Motion Detection and Tracking System
+                                  :-=+####%%%%%%####*+=-.                                 
+                           .-=*#**==-:.             .:-=+*#*+-:                           
+                        -*%#+-                              :=*%#=:                       
+                    :=##=:                                      :-*#+-                    
+                  +@#=                                              -*@*.                 
+               -*%=.                                                   -#%=               
+             :%#:                                                        .*@=             
+           :%#:                                                            .+%=           
+          +%:         :              ....:::::::::...              :.         #%:         
+        =@*       -*%*.         .....:.. .: .. ..  .:.....          =%#=.      =%*        
+       +@:    :.=@@%:        ...   :.    :  ..  ..   .:.   ...        +@@#.-.    #%       
+      *#   .*#.#@@*.      ..:.   ..     :   ..   :.    ..   .:..       =@@#.+%:   +%:     
+    .%%    %@ +@*.=:    .:     .::..   ..   ..    :   ..:::.    .:     +.=@* *@-   +@-    
+   .%#  -.#@* =-+@+   ..       :     ..:..+#==%%*.::.     ..      ..   :@#-=::@@:-  =@-   
+   *#  ++ @@:+%@#-   :.       :       :.  *#:.=@@. :       ..       :.  .+@@*:#@+ %  -%.  
+  -@  -@+ @*@@=:   .:        :        :     .-%#:  :.       :        ..   .=#@*@= @#  *#  
+ .@=  #@* %#-:+-   :...     ..        :     .+     ..       .:     .....  :*-:*@::@@. :@= 
+ *@   %@@ =:%@*   :     ....:..      ..     .:      :      ..::...     ..  +@@=-:+@@:  *@ 
+.@* . *@@ +@@*   ..        .:    ....:......@@=.....:....    .:         :   =@@#.+@@.. :@-
+=@: # .@#+@@::   :         :.        .      :-      :         :         ..  :.#@@=@+ *. #*
+*%. @= *#@#.-*  ..         :         :     .::.     :         ..         :  :# =@*%  %- +#
+%# .@@..@+ =@-  :.         :         :  -:=%@@@*:-: :         ..         :   @# :@= *@- -%
+@#  %@@.= +@%   :..........:........:=#@#   #%:  -@%+:........::.........:   =@%.= *@@: -%
+%#  =@@# =@@:   :.         : :==+*#%@@@@:  -++-.  #@@@@%*+==- ..         :    %@% +@@%  -%
+#%   +@@-#@* +  ..         :-@@@@@@@@@@%    *%    =@@@@@@@@@@*..         :  .-=@@.@@%.. +#
++@:.* :@#*@:.@.  :         :*@@@@@@@@@@@.   @@=   *@@@@@@@@@@@-         .:  #+ %@=@+ := #*
+.@+ @#:.#%% *@=  :.        :%@@@@@@@@@@@*  .@@+  :@@@@@@@@@@@@=         :  :@@ +@%- +@:.@-
+ #@ -@@+ -# %@+   :       .=@@@@@@@@@@@@@- .@@* .@@@@@@@@@@@@@#..      ..  =@@:=* -@@# +@ 
+ .@= :%@@+..@@* - .......  =@@@@@@@@@@@@@@-:@@*.%@@@@@@@@@@@@@%   ...... ..*@@-.-%@@= .@+ 
+  =%   =@@@=*@# =%..:      @@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@:     .. +% #@@-%@@#.  *#  
+   ##  :.+%@+%@ .@%  :    .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-    :. +@+ @@+@@*-.. -@.  
+   .@* -#- :+*@= #@#  ..  -@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+  ..  =@@.-@#*- :++ :@=   
+    :@* :%@*- .+::@@* : :.=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.:..::@@# +: .+@@+ -@*    
+     .#*  -#@@%*=.+@@=-#=.*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@% :*+.@@#.-+#@@@+. -@=     
+       #%.  :*@@@@#+%@:-@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@#.%@**@@@@#=   =@:      
+        +@=  :::-=*##%%-:%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+.#@##*+=:::  :#%.       
+         .##. :##+=::::-: -#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%= .-::::-+*#:  +@=         
+           =%+. .=*%@@@@@@@%%%%#*%@@@@@@@@@@@@@@@@@@@@@@@+*%%%%@@@@@@@@#+:  =%*           
+             =%+    ..:-=--:.  -+%@@@@@@@@@@@@@@@@@@@@@@@*=.  :--=--:..   =@*.            
+              .+%#:  -+**+**#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#**++*+=: .+%+.              
+                 :#%+:  :=+***+=-%@@@@@@@@@@@@@@@@@@@@@@@=-+****=-.  =#%=                 
+                   .-*#+-.       @@@@@@@@@@@@@@@@@@@@@@@@-       :=##=:                   
+                       :+%%+-   .@@@@@@@@@@@@@@@@@@@@@@@@+   :=#%*=                       
+                          .-=*#*#@@@@@@@@@@@@@@@@@@@@@@@@%*#*+-.                          
+                                 :-=+*##%%%@@@@%%%%#*+==:.                                
+                               
+                                 Cyber Wing Gold Campus
+
+"""
+print (banner)
+# Define functions for motion tracking and object detection
+def motion_tracking():
+    # Your motion tracking code here
+    import cv2
+    import numpy as np
+    import torch
+    from IPython.display import display, clear_output
+    import time
+
+    # Re-import YOLOv5 in case it wasn't imported earlier
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+
+    # Initialize webcam
+    cap = cv2.VideoCapture(0)
+
+    # Set webcam frame dimensions (optional)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+    # Loop to capture frames and run object detection
+    try:
+        while True:
+            ret, frame = cap.read()  # Capture a frame from the webcam
+            if not ret:
+                break
+
+            # Convert BGR to RGB (YOLOv5 expects RGB input)
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            # Run YOLOv5 object detection
+            results = model(frame_rgb)
+
+            # Get the annotated frame with detections
+            annotated_frame = np.squeeze(results.render())  # Render results to image
+
+            # Display the frame with detections
+            clear_output(wait=True)  # Clear the output to update the video feed
+            cv2.imshow("YOLOv5 Webcam", cv2.cvtColor(annotated_frame, cv2.COLOR_RGB2BGR))
+
+            # Check if 'q' is pressed to exit the loop
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+    except KeyboardInterrupt:
+        pass
+
+    # Release the webcam and close any open windows
+    cap.release()
+    cv2.destroyAllWindows()
+
+    print("Running motion tracking...")  # This line should be aligned with the function definition
+ 
+def object_detection():
+    # Your object detection code here
+    import cv2
+    import mediapipe as mp
+    import numpy as np
+
+    cap = cv2.VideoCapture(0)
+    ws, hs = 1280, 720
+    cap.set(3, ws)
+    cap.set(4, hs)
+
+    if not cap.isOpened():
+        print("Camera couldn't Access!!!")
+        exit()
+
+    mp_face_detection = mp.solutions.face_detection
+    mp_drawing = mp.solutions.drawing_utils
+
+    while True:
+        success, img = cap.read()
+
+        if not success:
+            print("Failed to read frame from the camera!")
+            break
+
+        # Convert the image to RGB
+        rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        
+        # Detect faces in the image
+        with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
+            results = face_detection.process(rgb_img)
+            
+            if results.detections:
+                for detection in results.detections:
+                    ih, iw, _ = img.shape
+                    bbox = int(detection.location_data.relative_bounding_box.xmin * iw), \
+                           int(detection.location_data.relative_bounding_box.ymin * ih), \
+                           int(detection.location_data.relative_bounding_box.width * iw), \
+                           int(detection.location_data.relative_bounding_box.height * ih)
+
+                    # Draw bounding box
+                    cv2.rectangle(img, bbox, (255, 0, 255), 2)
+
+                    # Calculate forehead position
+                    forehead_x = bbox[0] + bbox[2] // 2
+                    forehead_y = bbox[1]
+
+                    # Draw a large red dot on the forehead
+                    cv2.circle(img, (forehead_x, forehead_y), 10, (0, 0, 255), -1)
+
+        cv2.imshow("Image", img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    print("Running object detection...")  # This line should be aligned with the function definition
+
+# Display the banner
+print(banner)
+# Prompt the user to choose an option
+print("Choose an option:")
+print("1. Motion Tracking")
+print("2. Object Detection")
+
+# Get user input for the option
+option = input("Enter your choice: ")
+# Execute the corresponding functionality based on the user's choice
+if option == '1':
+    motion_tracking()
+elif option == '2':
+    object_detection()
+else:
+    print("Invalid option!")
